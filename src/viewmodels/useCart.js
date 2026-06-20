@@ -16,12 +16,15 @@ export function useCart() {
     const loadCart = useCallback(async () => {
         setLoading(true);
         try {
+            await DatabaseService.init();
             const rows = await DatabaseService.getCartItems();
             setItems(rows.map(r => CartItem.fromRow(r)));
             const t = await DatabaseService.getCartTotal();
             setTotal(t);
             const c = await DatabaseService.getCartCount();
             setCount(c);
+        } catch (err) {
+            console.warn('Error cargando carrito:', err);
         } finally {
             setLoading(false);
         }
@@ -86,7 +89,7 @@ export function useCart() {
     );
 
     useEffect(() => {
-        DatabaseService.init().then(loadCart);
+        loadCart();
     }, [loadCart]);
 
     return {
