@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View, Text, FlatList, TextInput,
     TouchableOpacity, StyleSheet, Alert,
 } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import { useCart } from
     '../../src/viewmodels/useCart';
 import CartItemRow from
@@ -11,9 +12,16 @@ import CartItemRow from
 export default function CartScreen() {
     const {
         items, total, loading,
-        updateQuantity, removeItem, checkout,
+        updateQuantity, removeItem, checkout, refresh,
     } = useCart();
     const [address, setAddress] = useState('');
+
+    // Recargar el carrito cuando se entra a esta pantalla (pestaña)
+    useFocusEffect(
+        useCallback(() => {
+            refresh();
+        }, [refresh])
+    );
 
     const handleCheckout = async () => {
         try {

@@ -10,8 +10,8 @@ El proyecto ha evolucionado para incluir una arquitectura de enrutamiento modern
 
 1. **Migración a Enrutamiento Moderno**:
    - Se instaló y configuró `@react-navigation` / `expo-router` para manejar las rutas de forma declarativa mediante carpetas y archivos.
-   - Modificación de [app.json](file:///c:/Users/Jhona/Downloads/Taller%20de%20construccion%20de%20software%20movil/Taller_Movil/NaturApp/app.json) para soportar el esquema de enrutamiento de Expo Router y el punto de entrada de la aplicación.
-   - Creación de [index.js](file:///c:/Users/Jhona/Downloads/Taller%20de%20construccion%20de%20software%20movil/Taller_Movil/NaturApp/index.js) como punto de entrada raíz que registra la actividad con `expo-router/entry`.
+   - Modificación de [app.json] para soportar el esquema de enrutamiento de Expo Router y el punto de entrada de la aplicación.
+   - Creación de [index.js] como punto de entrada raíz que registra la actividad con `expo-router/entry`.
 
 2. **Nuevos Componentes de Interfaz**:
    - **`CategoryChip.js`**: Un chip interactivo para filtrar rápidamente productos por categorías.
@@ -38,7 +38,7 @@ El proyecto ha evolucionado para incluir una arquitectura de enrutamiento modern
 
 ### Backend (Base de Datos & Auth)
 El backend de la aplicación está soportado por **Supabase**:
-- **Base de Datos**: PostgreSQL alojada en la nube (`https://wmxzrzgbkvgmcrqcexie.supabase.co`).
+- **Base de Datos**: PostgreSQL alojada en la nube.
 - **Tablas Principales**:
   - `products`: Almacena el inventario de productos (nombre, precio, categoría, descripción, URL de imagen, etc.).
   - `orders`: Registra los pedidos totales con su dirección y estado.
