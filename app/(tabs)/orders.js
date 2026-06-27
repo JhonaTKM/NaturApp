@@ -1,16 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     View, Text, FlatList,
     StyleSheet, ActivityIndicator,
     RefreshControl,
 } from 'react-native';
-import { useOrders } from
-    '../../src/viewmodels/useOrders';
+import { useOrders } from '../../src/viewmodels/useOrders';
 
 export default function OrdersScreen() {
     const { orders, loading, error, refresh } = useOrders();
-
-    useEffect(() => { refresh(); }, []);
 
     const renderOrder = ({ item }) => (
         <View style={styles.card}>
@@ -19,7 +16,7 @@ export default function OrdersScreen() {
                     Pedido #{item.id}
                 </Text>
                 <View style={[styles.badge,
-                    { backgroundColor: item.getStatusColor() }]}>
+                { backgroundColor: item.getStatusColor() }]}>
                     <Text style={styles.badgeText}>
                         {item.status}
                     </Text>

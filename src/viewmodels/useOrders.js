@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import ApiService from '../services/apiService';
 import { Order } from '../models/Order';
 
@@ -19,6 +20,12 @@ export function useOrders() {
             setLoading(false);
         }
     }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            loadOrders();
+        }, [loadOrders])
+    );
 
     return {
         orders, loading, error,

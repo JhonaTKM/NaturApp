@@ -8,46 +8,59 @@ import * as SQLite from 'expo-sqlite';
 
 let db = null;
 let initialized = false;
+let initPromise = null;
 
 const DatabaseService = {
     // --- INICIALIZAR base de datos ---
     async init() {
         if (initialized && db) return;
 
-        try {
-            db = await SQLite.openDatabaseAsync('naturapp.db');
-
-            // Crear tabla del carrito de compras
-            await db.execAsync(`
-                CREATE TABLE IF NOT EXISTS cart (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    product_id TEXT NOT NULL UNIQUE,
-                    name TEXT NOT NULL,
-                    price REAL NOT NULL,
-                    image TEXT,
-                    quantity INTEGER DEFAULT 1
-                );
-            `);
-
-            // Crear tabla de favoritos
-            await db.execAsync(`
-                CREATE TABLE IF NOT EXISTS favorites (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    product_id TEXT NOT NULL UNIQUE,
-                    name TEXT NOT NULL,
-                    price REAL NOT NULL,
-                    image TEXT,
-                    added_date TEXT DEFAULT (datetime('now'))
-                );
-            `);
-
-            initialized = true;
-            console.log('SQLite inicializada correctamente');
-        } catch (error) {
-            console.warn('Error inicializando SQLite:', error);
-            // No lanzar error para no bloquear la app
-            // El carrito simplemente no funcionará offline
+        if (initPromise) {
+            return initPromise;
         }
+
+        initPromise = (async () => {
+            try {
+                const database = await SQLite.openDatabaseAsync('naturapp.db');
+
+                // Crear tabla del carrito de compras
+                await database.execAsync(`
+                    CREATE TABLE IF NOT EXISTS cart (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        product_id TEXT NOT NULL UNIQUE,
+                        name TEXT NOT NULL,
+                        price REAL NOT NULL,
+                        image TEXT,
+                        quantity INTEGER DEFAULT 1
+                    );
+                `);
+
+                // Crear tabla de favoritos
+                await database.execAsync(`
+                    CREATE TABLE IF NOT EXISTS favorites (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        product_id TEXT NOT NULL UNIQUE,
+                        name TEXT NOT NULL,
+                        price REAL NOT NULL,
+                        image TEXT,
+                        added_date TEXT DEFAULT (datetime('now'))
+                    );
+                `);
+
+                db = database;
+                initialized = true;
+                console.log('SQLite inicializada correctamente');
+            } catch (error) {
+                console.warn('Error inicializando SQLite:', error);
+                db = null;
+                initialized = false;
+                throw error;
+            } finally {
+                initPromise = null;
+            }
+        })();
+
+        return initPromise;
     },
 
     // Helper: asegurar que DB está lista antes de operar
@@ -57,7 +70,8 @@ const DatabaseService = {
         }
         if (!db) {
             throw new Error(
-                'Base de datos no disponible');
+                'No se pudo abrir la base de datos local.'
+            );
         }
     },
 
